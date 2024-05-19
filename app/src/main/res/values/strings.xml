@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="sign_in_subtitle">Sign in with your account</string>
+    <string name="continue_with">Or continue with:</string>
+    <string name="not_account">You do not have an account?</string>
+    <string name="register_now">Register now</string>
+    <string name="forgot_password">I forgot my password</string>
+    <string name="password_invalid">Invalid password</string>
+</resources>
