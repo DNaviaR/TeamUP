@@ -23,7 +23,6 @@
     <string name="passwords_distinct">Passwords do not match</string>
     <string name="empty_fields">Fields cannot be empty</string>
     <string name="should_accept_privacy">You should accept the privacy policy</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
