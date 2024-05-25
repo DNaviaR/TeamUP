@@ -12,4 +12,18 @@
     <string name="register_now">Register now</string>
     <string name="forgot_password">I forgot my password</string>
     <string name="password_invalid">Invalid password</string>
+    <string name="auth_error">Authentication Failed</string>
+    <string name="auth_successful">Authentication Successful</string>
+    <string name="create_account">Create your account</string>
+    <string name="register_with">Or register with:</string>
+    <string name="have_account">Do you already have an account?</string>
+    <string name="log_in">Log in</string>
+    <string name="name">Name</string>
+    <string name="privacy">Privacy policy</string>
+    <string name="passwords_distinct">Passwords do not match</string>
+    <string name="empty_fields">Fields cannot be empty</string>
+    <string name="should_accept_privacy">You should accept the privacy policy</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

@@ -1,3 +1,4 @@
+<!-- res/layout/fragment_register.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -5,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context=".LoginFragment">
+    tools:context=".RegisterFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,7 +37,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/montserrat"
-            android:text="@string/sign_in_subtitle"
+            android:text="@string/create_account"
             android:textColor="@color/secondary"
             android:textSize="16sp" />
     </LinearLayout>
@@ -52,18 +53,42 @@
         android:paddingEnd="16dp"
         android:weightSum="2">
 
-        <!-- TextInputLayout Email -->
+        <!-- TextInputLayout Name -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/TextFieldEmailLogin"
+            android:id="@+id/TextFieldNameRegister"
             style="?attr/textInputFilledStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            app:startIconTint="@color/secondary"
+            app:boxStrokeColor="@color/secondary"
+            android:hint="@string/name"
+            app:startIconDrawable="@drawable/user_icon">
+
+            <EditText
+                android:id="@+id/editTextNameRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- TextInputLayout Email -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/TextFieldEmailRegister"
+            style="?attr/textInputFilledStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:startIconTint="@color/secondary"
+            app:boxStrokeColor="@color/secondary"
             android:hint="@string/prompt_email"
             app:startIconDrawable="@drawable/email_icon">
 
             <EditText
-                android:id="@+id/editTextEmailLogin"
+                android:id="@+id/editTextEmailRegister"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/background"
@@ -74,17 +99,19 @@
 
         <!-- TextInputLayout Password -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/TextFieldPasswordLogin"
+            android:id="@+id/TextFieldPasswordRegister"
             style="?attr/textInputFilledStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            app:startIconTint="@color/secondary"
+            app:boxStrokeColor="@color/secondary"
             android:hint="@string/prompt_password"
             app:endIconMode="password_toggle"
             app:startIconDrawable="@drawable/key_icon">
 
             <EditText
-                android:id="@+id/editTextPasswordLogin"
+                android:id="@+id/editTextPasswordRegister"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/background"
@@ -93,27 +120,46 @@
                 tools:ignore="LabelFor" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- TextView Forgot Password -->
-        <TextView
-            android:id="@+id/textViewLoginForgotPassword"
-            android:layout_width="wrap_content"
+        <!-- TextInputLayout Confirm Password -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/TextFieldConfirmPasswordRegister"
+            style="?attr/textInputFilledStyle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/montserrat"
-            android:text="@string/forgot_password"
-            android:textColor="@color/secondary"
-            android:textSize="14sp" />
+            android:layout_marginTop="16dp"
+            app:startIconTint="@color/secondary"
+            app:boxStrokeColor="@color/secondary"
+            android:hint="@string/prompt_password"
+            app:endIconMode="password_toggle"
+            app:startIconDrawable="@drawable/key_icon">
+
+            <EditText
+                android:id="@+id/editTextConfirmPasswordRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Button Sign In -->
+        <CheckBox
+            android:id="@+id/checkBoxPrivacy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:textColor="@color/secondary"
+            android:text="@string/privacy" />
+
         <Button
-            android:id="@+id/ButtonLoginSignIn"
+            android:id="@+id/ButtonRegister"
             style="@style/Widget.Material3.Button.IconButton.Filled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:backgroundTint="@color/support1"
-            android:text="@string/sign_in"
+            android:text="@string/create_account"
             android:textColor="@color/secondary" />
 
     </LinearLayout>
@@ -135,7 +181,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/montserrat"
-            android:text="@string/continue_with"
+            android:text="@string/register_with"
             android:textColor="@color/secondary"
             android:textSize="12sp" />
 
@@ -186,22 +232,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat"
-            android:text="@string/not_account"
+            android:text="@string/have_account"
             android:textColor="@color/secondary"
             android:textSize="14sp" />
 
         <!-- TextView Register Now -->
         <TextView
-            android:id="@+id/textViewLoginRegisterNow"
+            android:id="@+id/textViewLoginNow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:fontFamily="@font/montserrat"
-            android:text="@string/register_now"
+            android:text="@string/log_in"
             android:textColor="@color/support1"
             android:textSize="14sp" />
     </LinearLayout>
 
 
 </LinearLayout>
+
 

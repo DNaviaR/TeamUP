@@ -13,4 +13,15 @@
     <string name="register_now">Registrate ahora</string>
     <string name="forgot_password">Olvidé mi contraseña</string>
     <string name="password_invalid">Contraseña no valida</string>
+    <string name="auth_error">Error de autentificación</string>
+    <string name="auth_successful">Autentificación exitosa</string>
+    <string name="create_account">Crea tu cuenta</string>
+    <string name="register_with">O registrate con:</string>
+    <string name="have_account">¿Ya tienes una cuenta?</string>
+    <string name="log_in">Inicia sesión</string>
+    <string name="name">Nombre</string>
+    <string name="privacy">Política de privacidad</string>
+    <string name="passwords_distinct">Las contraseñas no coinciden</string>
+    <string name="empty_fields">Los campos no pueden estar vacíos</string>
+    <string name="should_accept_privacy">Debes aceptar la política de privacidad</string>
 </resources>
