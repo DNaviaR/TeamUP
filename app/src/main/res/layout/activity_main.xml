@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Widget.TopAppBar.MyApplication"
+        app:title="@string/app_name" />
+
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
@@ -15,7 +22,7 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
-        style="@style/Widget.Design.BottomNavigationView"
+        style="@style/Widget.App.BottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menu="@menu/bottom_navigation_menu" />

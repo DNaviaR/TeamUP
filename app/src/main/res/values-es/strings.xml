@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">TeamUP</string>
     <string name="prompt_email">Correo electrónico</string>
     <string name="prompt_password">Contraseña</string>
     <string name="sign_in">Iniciar sesión</string>
@@ -24,4 +24,9 @@
     <string name="passwords_distinct">Las contraseñas no coinciden</string>
     <string name="empty_fields">Los campos no pueden estar vacíos</string>
     <string name="should_accept_privacy">Debes aceptar la política de privacidad</string>
+    <string name="hello_blank_fragment">Hola</string>
+    <string name="home">Inicio</string>
+    <string name="standings">Clasificación</string>
+    <string name="matches">Partidos</string>
+    <string name="profile">Perfil</string>
 </resources>

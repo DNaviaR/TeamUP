@@ -1,22 +1,22 @@
 package com.example.myapplication;
 
-import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationHost{
 
     BottomNavigationView bottomNavigationView;
+    MaterialToolbar topbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,38 +24,41 @@ public class MainActivity extends AppCompatActivity implements NavigationHost{
         setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+        topbar = findViewById(R.id.topbar);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.container, new LoginFragment())
+                    .add(R.id.container, new HomeFragment())
                     .commit();
 
             // Ocultar la barra de navegación cuando se inicia en el fragmento de Login
-            bottomNavigationView.setVisibility(View.GONE);
+            //bottomNavigationView.setVisibility(View.GONE);
+            //topbar.setVisibility(View.GONE);
         }
 
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment = null;
-                int itemId = item.getItemId();
-                if (itemId == R.id.home) {
-                    fragment = new HomeFragment();
-                } else if (itemId == R.id.standings) {
-                    fragment = new HomeFragment();
-                } else if (itemId == R.id.matches) {
-                    fragment = new HomeFragment();
-                } else if (itemId == R.id.profile) {
-                    fragment = new RegisterFragment();
-                }
+        ColorStateList colorStateList = ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color);
 
-                if (fragment != null) {
-                    navigateTo(fragment, false);
-                    return true;
-                }
-                return false;
+        bottomNavigationView.setItemIconTintList(colorStateList);
+        bottomNavigationView.setItemTextColor(colorStateList);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            Fragment fragment = null;
+            int itemId = item.getItemId();
+            if (itemId == R.id.home) {
+                fragment = new HomeFragment();
+            } else if (itemId == R.id.standings) {
+                fragment = new HomeFragment();
+            } else if (itemId == R.id.matches) {
+                fragment = new HomeFragment();
+            } else if (itemId == R.id.profile) {
+                fragment = new RegisterFragment();
             }
+
+            if (fragment != null) {
+                navigateTo(fragment, false);
+                return true;
+            }
+            return false;
         });
     }
 
@@ -81,8 +84,10 @@ public class MainActivity extends AppCompatActivity implements NavigationHost{
     private void updateBottomNavigationVisibility(Fragment fragment) {
         if (isLoginOrRegisterFragment(fragment)) {
             bottomNavigationView.setVisibility(View.GONE);
+            topbar.setVisibility(View.GONE);
         } else {
             bottomNavigationView.setVisibility(View.VISIBLE);
+            topbar.setVisibility(View.VISIBLE);
         }
     }
 
