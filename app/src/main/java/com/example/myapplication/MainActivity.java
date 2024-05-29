@@ -9,6 +9,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.myapplication.homescreen.HomeFragment;
+import com.example.myapplication.standingsscreen.StandingsFragment;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavigationHost{
             if (itemId == R.id.home) {
                 fragment = new HomeFragment();
             } else if (itemId == R.id.standings) {
-                fragment = new HomeFragment();
+                fragment = new StandingsFragment();
             } else if (itemId == R.id.matches) {
                 fragment = new HomeFragment();
             } else if (itemId == R.id.profile) {

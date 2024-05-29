@@ -41,6 +41,13 @@
         <item name="itemActiveIndicatorStyle">@color/support1</item>
         <item name="colorSurface">@color/support2</item>
         <item name="colorOnSurfaceVariant">@color/support2</item>
+    </style>
 
+    <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/support1</item>
+        <item name="tabSelectedTextColor">@color/support1</item>
+        <item name="tabTextColor">@color/secondary</item>
+        <item name="tabIndicatorHeight">4dp</item>
+        <item name="android:background">@color/background</item>
     </style>
 </resources>

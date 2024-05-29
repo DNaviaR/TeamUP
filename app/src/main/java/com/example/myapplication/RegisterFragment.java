@@ -1,9 +1,13 @@
 package com.example.myapplication;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +16,14 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterFragment extends Fragment {
     private EditText nameEditText;
@@ -25,6 +34,7 @@ public class RegisterFragment extends Fragment {
     private CheckBox checkBoxPrivacy;
     private TextView loginNow;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Nullable
     @Override
@@ -40,20 +50,11 @@ public class RegisterFragment extends Fragment {
         loginNow=view.findViewById(R.id.textViewLoginNow);
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                registerUser();
-            }
-        });
+        registerButton.setOnClickListener(v -> registerUser());
 
-        loginNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateTo();
-            }
-        });
+        loginNow.setOnClickListener(v -> navigateTo());
 
         return view;
     }
@@ -90,8 +91,17 @@ public class RegisterFragment extends Fragment {
                             user.updateProfile(profileUpdates)
                                     .addOnCompleteListener(profileTask -> {
                                         if (profileTask.isSuccessful()) {
+                                            Map<String, Object> usuario = new HashMap<>();
+                                            usuario.put("nombre", name);
+                                            usuario.put("email", email);
+                                            usuario.put("contraseña", password);
+
+// Add a new document with a generated ID
+                                            db.collection("usuarios")
+                                                    .add(usuario)
+                                                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                                                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
                                             Toast.makeText(getContext(), getString(R.string.auth_successful), Toast.LENGTH_SHORT).show();
-                                            // Navegar al siguiente fragmento o actividad
                                             navigateTo();
                                         }
                                     });

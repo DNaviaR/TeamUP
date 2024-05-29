@@ -29,4 +29,12 @@
     <string name="standings">Clasificación</string>
     <string name="matches">Partidos</string>
     <string name="profile">Perfil</string>
+    <string name="team">Equipo</string>
+    <string name="pos">Pos</string>
+    <string name="m">M</string>
+    <string name="w">G</string>
+    <string name="d">E</string>
+    <string name="l">P</string>
+    <string name="pts">PTS</string>
+    <string name="gd">GD</string>
 </resources>
