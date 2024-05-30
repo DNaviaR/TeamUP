@@ -70,13 +70,13 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             Team currentItem = teamList.get(position - 1); // Ajuste de posición por la cabecera
             ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
             itemViewHolder.position.setText(String.valueOf(position)); // Usando la posición del RecyclerView ajustada
-            itemViewHolder.name.setText(currentItem.getName());
-            itemViewHolder.played.setText(String.valueOf(currentItem.getPlayed()));
-            itemViewHolder.wins.setText(String.valueOf(currentItem.getWins()));
-            itemViewHolder.draws.setText(String.valueOf(currentItem.getDraws()));
-            itemViewHolder.losses.setText(String.valueOf(currentItem.getLosses()));
-            itemViewHolder.goalDifference.setText(currentItem.getGoalDifference());
-            itemViewHolder.points.setText(String.valueOf(currentItem.getPoints()));
+            itemViewHolder.name.setText(currentItem.getNombreEquipo());
+            itemViewHolder.played.setText(String.valueOf(currentItem.getPartidosTotales()));
+            itemViewHolder.wins.setText(String.valueOf(currentItem.getPartidosGanados()));
+            itemViewHolder.draws.setText(String.valueOf(currentItem.getPartidosEmpatados()));
+            itemViewHolder.losses.setText(String.valueOf(currentItem.getPartidosPerdidos()));
+            itemViewHolder.goalDifference.setText(String.valueOf(currentItem.getDiferenciaGoles()));
+            itemViewHolder.points.setText(String.valueOf(currentItem.getPuntos()));
         }
     }
 
