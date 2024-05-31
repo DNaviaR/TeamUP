@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:gravity="center"
-            android:text="@string/team"
+            android:text="@string/equipoLiga"
             android:textStyle="bold" />
 
         <TextView

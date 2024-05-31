@@ -3,6 +3,7 @@ package com.example.myapplication;
 import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -46,8 +47,8 @@ public class RegisterFragment extends Fragment {
         passwordEditText = view.findViewById(R.id.editTextPasswordRegister);
         confirmPasswordEditText = view.findViewById(R.id.editTextConfirmPasswordRegister);
         registerButton = view.findViewById(R.id.ButtonRegister);
-        checkBoxPrivacy=view.findViewById(R.id.checkBoxPrivacy);
-        loginNow=view.findViewById(R.id.textViewLoginNow);
+        checkBoxPrivacy = view.findViewById(R.id.checkBoxPrivacy);
+        loginNow = view.findViewById(R.id.textViewLoginNow);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -75,7 +76,7 @@ public class RegisterFragment extends Fragment {
             return;
         }
 
-        if (!checkBoxPrivacy.isChecked()){
+        if (!checkBoxPrivacy.isChecked()) {
             Toast.makeText(getContext(), getString(R.string.should_accept_privacy), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -93,9 +94,6 @@ public class RegisterFragment extends Fragment {
                                         if (profileTask.isSuccessful()) {
                                             Map<String, Object> usuario = new HashMap<>();
                                             usuario.put("nombre", name);
-                                            usuario.put("email", email);
-                                            usuario.put("contraseña", password);
-
 // Add a new document with a generated ID
                                             db.collection("usuarios")
                                                     .add(usuario)

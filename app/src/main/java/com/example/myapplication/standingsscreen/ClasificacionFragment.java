@@ -15,6 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.myapplication.R;
+import com.example.myapplication.adapters.TeamAdapter;
+import com.example.myapplication.models.Equipo;
+import com.example.myapplication.models.Equipo_Liga;
+import com.example.myapplication.models.Liga;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,20 +29,20 @@ import java.util.Comparator;
 public class ClasificacionFragment extends Fragment {
     private RecyclerView recyclerView;
     private TeamAdapter teamAdapter;
-    private ArrayList<Team> teamList;
+    private ArrayList<Equipo_Liga> equipoLigaList;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_clasificacion, container, false);
+        View view = inflater.inflate(R.layout.clasificacion_fragment, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
 
-        teamList = new ArrayList<>();
-        teamAdapter = new TeamAdapter(teamList);
+        equipoLigaList = new ArrayList<>();
+        teamAdapter = new TeamAdapter(equipoLigaList);
         recyclerView.setAdapter(teamAdapter);
 
         // Define el nombre de la liga que deseas filtrar
@@ -61,24 +65,24 @@ public class ClasificacionFragment extends Fragment {
                         if (task1.isSuccessful()) {
                             DocumentSnapshot equipoDoc = task1.getResult();
                             if (equipoDoc.exists()) {
-                                String nombreEquipo = equipoDoc.getString("Nombre");
+                                Equipo equipo = new Equipo(equipoDoc.getData());
 
                                 ligaRef.get().addOnCompleteListener(task11 -> {
                                     if (task11.isSuccessful()) {
                                         DocumentSnapshot ligaDoc = task11.getResult();
                                         if (ligaDoc.exists()) {
-                                            String nombreLiga = ligaDoc.getString("nombre");
+                                            Liga liga = new Liga(ligaDoc.getData());
 
                                             // Filtrar por el nombre de la liga
-                                            if (nombreLiga != null && nombreLiga.equals(nombreLigaFiltrar)) {
+                                            if (liga.getNombre() != null && liga.getNombre().equals(nombreLigaFiltrar)) {
                                                 // Crear un objeto Team con todos los datos combinados
-                                                Team team = new Team(equipoRef, ligaRef, nombreEquipo, nombreLiga, partidosGanados, partidosEmpatados, partidosPerdidos, diferenciaGoles, puntos);
-                                                teamList.add(team);
+                                                Equipo_Liga equipoLiga = new Equipo_Liga(equipo, liga, partidosGanados, partidosEmpatados, partidosPerdidos, diferenciaGoles, puntos);
+                                                equipoLigaList.add(equipoLiga);
 
                                                 // Ordenar la lista por puntos después de agregar el equipo
-                                                teamList.sort(new Comparator<Team>() {
+                                                equipoLigaList.sort(new Comparator<Equipo_Liga>() {
                                                     @Override
-                                                    public int compare(Team t1, Team t2) {
+                                                    public int compare(Equipo_Liga t1, Equipo_Liga t2) {
                                                         return Integer.compare(t2.getPuntos(), t1.getPuntos());
                                                     }
                                                 });

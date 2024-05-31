@@ -1,12 +1,10 @@
-package com.example.myapplication.standingsscreen;
+package com.example.myapplication.models;
 
 import com.google.firebase.firestore.DocumentReference;
 
-public class Team {
-    private DocumentReference equipoRef;
-    private DocumentReference ligaRef;
-    private String nombreEquipo;
-    private String nombreLiga;
+public class Equipo_Liga {
+    private Equipo equipo;
+    private Liga liga;
     private int partidostotales;
     private int partidosGanados;
     private int partidosEmpatados;
@@ -14,59 +12,38 @@ public class Team {
     private int diferenciaGoles;
     private int puntos;
 
-    // Constructor
-    public Team(DocumentReference equipoRef, DocumentReference ligaRef, String nombreEquipo, String nombreLiga, int partidosGanados, int partidosEmpatados, int partidosPerdidos, int diferenciaGoles, int puntos) {
-        this.equipoRef = equipoRef;
-        this.ligaRef = ligaRef;
-        this.nombreEquipo=nombreEquipo;
-        this.nombreLiga=nombreLiga;
+    public Equipo_Liga(Equipo equipo, Liga liga, int partidosGanados, int partidosEmpatados, int partidosPerdidos, int diferenciaGoles, int puntos) {
+        this.equipo = equipo;
+        this.liga = liga;
         this.partidosGanados = partidosGanados;
         this.partidosEmpatados = partidosEmpatados;
         this.partidosPerdidos = partidosPerdidos;
-        this.partidostotales=partidosGanados+partidosEmpatados+partidosPerdidos;
+        this.partidostotales = partidosGanados+partidosEmpatados+partidosPerdidos;
         this.diferenciaGoles = diferenciaGoles;
         this.puntos = puntos;
     }
 
-    // Getters y setters
-
-    public DocumentReference getEquipoRef() {
-        return equipoRef;
+    public Equipo getEquipo() {
+        return equipo;
     }
 
-    public void setEquipoRef(DocumentReference equipoRef) {
-        this.equipoRef = equipoRef;
+    public void setEquipo(Equipo equipo) {
+        this.equipo = equipo;
     }
 
-    public DocumentReference getLigaRef() {
-        return ligaRef;
+    public Liga getLiga() {
+        return liga;
     }
 
-    public void setLigaRef(DocumentReference ligaRef) {
-        this.ligaRef = ligaRef;
+    public void setLiga(Liga liga) {
+        this.liga = liga;
     }
 
-    public String getNombreEquipo() {
-        return nombreEquipo;
-    }
-
-    public void setNombreEquipo(String nombreEquipo) {
-        this.nombreEquipo = nombreEquipo;
-    }
-
-    public String getNombreLiga() {
-        return nombreLiga;
-    }
-
-    public void setNombreLiga(String nombreLiga) {
-        this.nombreLiga = nombreLiga;
-    }
-
-    public int getPartidosTotales() {
+    public int getPartidostotales() {
         return partidostotales;
     }
 
-    public void setPartidosTotales(int partidostotales) {
+    public void setPartidostotales(int partidostotales) {
         this.partidostotales = partidostotales;
     }
 
