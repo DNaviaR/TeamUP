@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.myapplication.R;
+import com.example.myapplication.SharedViewModel;
 import com.example.myapplication.adapters.TeamAdapter;
 import com.example.myapplication.models.Equipo;
 import com.example.myapplication.models.Equipo_Liga;
@@ -30,7 +32,8 @@ public class ClasificacionFragment extends Fragment {
     private RecyclerView recyclerView;
     private TeamAdapter teamAdapter;
     private ArrayList<Equipo_Liga> equipoLigaList;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private SharedViewModel sharedViewModel;
 
     @Nullable
     @Override
@@ -45,12 +48,20 @@ public class ClasificacionFragment extends Fragment {
         teamAdapter = new TeamAdapter(equipoLigaList);
         recyclerView.setAdapter(teamAdapter);
 
-        // Define el nombre de la liga que deseas filtrar
-        String nombreLigaFiltrar = "Liga Pruebas";
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
-        // Paso 1: Consultar equipo_liga
+        sharedViewModel.getNombreLiga().observe(getViewLifecycleOwner(), nombreLiga -> {
+            if (nombreLiga != null && !nombreLiga.isEmpty()) {
+                cargarClasificacion(nombreLiga);
+            }
+        });
+        return view;
+    }
+
+    private void cargarClasificacion(String nombreLigaFiltrar) {
         db.collection("equipo_liga").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                equipoLigaList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     DocumentReference equipoRef = document.getDocumentReference("Equipo_ID");
                     DocumentReference ligaRef = document.getDocumentReference("Liga_ID");
@@ -60,7 +71,6 @@ public class ClasificacionFragment extends Fragment {
                     int partidosPerdidos = document.getLong("Partidos_Perdidos").intValue();
                     int puntos = document.getLong("Puntos").intValue();
 
-                    // Paso 2: Consultar los nombres de equipo y liga
                     equipoRef.get().addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
                             DocumentSnapshot equipoDoc = task1.getResult();
@@ -73,21 +83,10 @@ public class ClasificacionFragment extends Fragment {
                                         if (ligaDoc.exists()) {
                                             Liga liga = new Liga(ligaDoc.getData());
 
-                                            // Filtrar por el nombre de la liga
                                             if (liga.getNombre() != null && liga.getNombre().equals(nombreLigaFiltrar)) {
-                                                // Crear un objeto Team con todos los datos combinados
                                                 Equipo_Liga equipoLiga = new Equipo_Liga(equipo, liga, partidosGanados, partidosEmpatados, partidosPerdidos, diferenciaGoles, puntos);
                                                 equipoLigaList.add(equipoLiga);
-
-                                                // Ordenar la lista por puntos después de agregar el equipo
-                                                equipoLigaList.sort(new Comparator<Equipo_Liga>() {
-                                                    @Override
-                                                    public int compare(Equipo_Liga t1, Equipo_Liga t2) {
-                                                        return Integer.compare(t2.getPuntos(), t1.getPuntos());
-                                                    }
-                                                });
-
-                                                // Notificar al adaptador sobre el cambio de datos
+                                                equipoLigaList.sort((t1, t2) -> Integer.compare(t2.getPuntos(), t1.getPuntos()));
                                                 teamAdapter.notifyDataSetChanged();
                                             }
                                         }
@@ -98,11 +97,8 @@ public class ClasificacionFragment extends Fragment {
                     });
                 }
             } else {
-                Log.d(TAG, "Error getting documents: ", task.getException());
+                Log.d("ClasificacionFragment", "Error getting documents: ", task.getException());
             }
         });
-
-
-        return view;
     }
 }

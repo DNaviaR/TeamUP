@@ -3,9 +3,10 @@ package com.example.myapplication.models;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class Usuario {
+public class Usuario implements Serializable {
     private FirebaseAuth mAuth;
     FirebaseUser user;
     private String nombre;

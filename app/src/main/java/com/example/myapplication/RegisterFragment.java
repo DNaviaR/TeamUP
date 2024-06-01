@@ -94,6 +94,7 @@ public class RegisterFragment extends Fragment {
                                         if (profileTask.isSuccessful()) {
                                             Map<String, Object> usuario = new HashMap<>();
                                             usuario.put("nombre", name);
+                                            usuario.put("email", email);
 // Add a new document with a generated ID
                                             db.collection("usuarios")
                                                     .add(usuario)

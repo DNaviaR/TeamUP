@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.homescreen.HomeFragment;
 import com.example.myapplication.standingsscreen.StandingsFragment;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements NavigationHost{
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.container, new HomeFragment())
+                    .add(R.id.container, new LoginFragment())
                     .commit();
 
             // Ocultar la barra de navegación cuando se inicia en el fragmento de Login

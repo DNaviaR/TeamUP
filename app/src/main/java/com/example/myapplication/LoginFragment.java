@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.homescreen.HomeFragment;
+import com.example.myapplication.models.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.util.TextUtils;
@@ -27,6 +29,7 @@ public class LoginFragment extends Fragment {
     private TextView registerNowButton;
 
     private FirebaseAuth mAuth;
+    private SharedViewModel sharedViewModel;
 
     @Nullable
     @Override
@@ -39,6 +42,7 @@ public class LoginFragment extends Fragment {
         registerNowButton = view.findViewById(R.id.textViewLoginRegisterNow);
 
         mAuth = FirebaseAuth.getInstance();
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         loginButton.setOnClickListener(v -> loginUser());
 
@@ -60,9 +64,15 @@ public class LoginFragment extends Fragment {
                 .addOnCompleteListener(getActivity(), task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(getContext(), getString(R.string.auth_successful), Toast.LENGTH_SHORT).show();
-                        // Update UI with the signed-in user's information
-                        updateUI(user);
+                        if (user != null) {
+                            Usuario usuario = new Usuario();
+                            usuario.setNombre(user.getDisplayName());
+                            usuario.setEmail(user.getEmail());
+                            sharedViewModel.setUsuario(usuario);
+
+                            Toast.makeText(getContext(), getString(R.string.auth_successful), Toast.LENGTH_SHORT).show();
+                            updateUI(user);
+                        }
                     } else {
                         Toast.makeText(getContext(), getString(R.string.auth_error), Toast.LENGTH_SHORT).show();
                         updateUI(null);

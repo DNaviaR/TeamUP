@@ -5,7 +5,9 @@ import static android.content.ContentValues.TAG;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,8 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.myapplication.R;
+import com.example.myapplication.SharedViewModel;
 import com.example.myapplication.adapters.LigaAdapter;
-import com.example.myapplication.models.Equipo_Liga;
 import com.example.myapplication.models.Liga;
 import com.example.myapplication.models.Usuario;
 import com.google.firebase.firestore.DocumentReference;
@@ -32,8 +34,17 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private LigaAdapter ligaAdapter;
-    private ArrayList<Liga> LigaList;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private ArrayList<Liga> ligaList;
+    private FirebaseFirestore db;
+    private SharedViewModel sharedViewModel;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        db = FirebaseFirestore.getInstance();
+        ligaList = new ArrayList<>();
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+    }
 
     @Override
     public View onCreateView(
@@ -44,44 +55,45 @@ public class HomeFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
-
-        LigaList = new ArrayList<>();
-        ligaAdapter = new LigaAdapter(LigaList);
+        ligaAdapter = new LigaAdapter(ligaList);
         recyclerView.setAdapter(ligaAdapter);
 
-        // Define el nombre de la liga que deseas filtrar
-        String emailUsuarioFiltrar = "a@a.com";
+        // Observa el usuario logueado en el ViewModel
+        sharedViewModel.getUsuario().observe(getViewLifecycleOwner(), usuario -> {
+            if (usuario != null) {
+                String emailUsuarioFiltrar = usuario.getEmail();
+                cargarLigas(emailUsuarioFiltrar);
+            }
+        });
 
-        // Paso 1: Consultar usuario_liga
+        return view;
+    }
+
+    private void cargarLigas(String emailUsuarioFiltrar) {
         db.collection("usuario_liga").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                ligaList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     DocumentReference usuarioRef = document.getDocumentReference("Usuario_ID");
                     DocumentReference ligaRef = document.getDocumentReference("Liga_ID");
 
-                    // Paso 2: Consultar los nombres de usuario y liga
+                    // Consultar los nombres de usuario y liga
                     usuarioRef.get().addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
                             DocumentSnapshot usuarioDoc = task1.getResult();
                             if (usuarioDoc.exists()) {
-                                Usuario usuario = new Usuario(usuarioDoc.getData());
-                                if (usuario.getUser().getEmail().equals(emailUsuarioFiltrar)){
+                                Usuario usuarioTabla = new Usuario(usuarioDoc.getData());
+                                if (usuarioTabla.getEmail().equals(emailUsuarioFiltrar)) {
                                     ligaRef.get().addOnCompleteListener(task11 -> {
                                         if (task11.isSuccessful()) {
                                             DocumentSnapshot ligaDoc = task11.getResult();
                                             if (ligaDoc.exists()) {
                                                 Liga liga = new Liga(ligaDoc.getData());
-                                                LigaList.add(liga);
-                                                LigaList.sort(new Comparator<Liga>() {
-                                                    @Override
-                                                    public int compare(Liga t1, Liga t2) {
-                                                        return t1.getNombre().compareTo(t2.getNombre());
-                                                    }
-                                                });
+                                                ligaList.add(liga);
+                                                ligaList.sort(Comparator.comparing(Liga::getNombre));
 
                                                 // Notificar al adaptador sobre el cambio de datos
                                                 ligaAdapter.notifyDataSetChanged();
-
                                             }
                                         }
                                     });
@@ -91,10 +103,9 @@ public class HomeFragment extends Fragment {
                     });
                 }
             } else {
-                Log.d(TAG, "Error getting documents: ", task.getException());
+                Log.d("HomeFragment", "Error getting documents: ", task.getException());
             }
         });
-
-        return view;
     }
 }
+

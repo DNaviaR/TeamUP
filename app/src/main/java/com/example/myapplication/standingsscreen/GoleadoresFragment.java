@@ -11,10 +11,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
+import com.example.myapplication.SharedViewModel;
 import com.example.myapplication.adapters.GoleadoresAdapter;
 import com.example.myapplication.models.Estadistica;
 import com.example.myapplication.models.Goleadores;
@@ -34,7 +36,8 @@ public class GoleadoresFragment extends Fragment {
     private RecyclerView recyclerView;
     private GoleadoresAdapter goleadoresAdapter;
     private ArrayList<Goleadores> goleadoresList;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private SharedViewModel sharedViewModel;
 
     @Nullable
     @Override
@@ -49,58 +52,56 @@ public class GoleadoresFragment extends Fragment {
         goleadoresAdapter = new GoleadoresAdapter(goleadoresList);
         recyclerView.setAdapter(goleadoresAdapter);
 
-        // Define el nombre de la liga que deseas filtrar
-        String nombreLigaFiltrar = "Liga Pruebas";
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
-        // Paso 1: Consultar equipo_liga
+        sharedViewModel.getNombreLiga().observe(getViewLifecycleOwner(), nombreLiga -> {
+            if (nombreLiga != null && !nombreLiga.isEmpty()) {
+                cargarGoleadores(nombreLiga);
+            }
+        });
+
+        return view;
+    }
+
+    private void cargarGoleadores(String nombreLigaFiltrar) {
         db.collection("estadistica_xogador_liga").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                goleadoresList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     DocumentReference estadisticaRef = document.getDocumentReference("Estadistica_ID");
                     DocumentReference ligaRef = document.getDocumentReference("Liga_ID");
                     DocumentReference xogadorRef = document.getDocumentReference("Xogador_ID");
                     int cantidad = document.getLong("Cantidad").intValue();
 
-                    // Paso 2: Consultar los nombres de equipo y liga
                     estadisticaRef.get().addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
                             DocumentSnapshot estadisticaDoc = task1.getResult();
                             if (estadisticaDoc.exists()) {
                                 Estadistica estadistica = new Estadistica(estadisticaDoc.getData());
 
-                                if (estadistica.getNombre().equals("Goleadores")){
+                                if ("Goleadores".equals(estadistica.getNombre())) {
                                     ligaRef.get().addOnCompleteListener(task11 -> {
                                         if (task11.isSuccessful()) {
                                             DocumentSnapshot ligaDoc = task11.getResult();
                                             if (ligaDoc.exists()) {
                                                 Liga liga = new Liga(ligaDoc.getData());
 
-                                                xogadorRef.get().addOnCompleteListener(task111 -> {
-                                                    if (task111.isSuccessful()) {
-                                                        DocumentSnapshot xogadorDoc = task111.getResult();
-                                                        if (xogadorDoc.exists()) {
-                                                            Xogador xogador = new Xogador(xogadorDoc.getData());
+                                                if (nombreLigaFiltrar.equals(liga.getNombre())) {
+                                                    xogadorRef.get().addOnCompleteListener(task111 -> {
+                                                        if (task111.isSuccessful()) {
+                                                            DocumentSnapshot xogadorDoc = task111.getResult();
+                                                            if (xogadorDoc.exists()) {
+                                                                Xogador xogador = new Xogador(xogadorDoc.getData());
 
-                                                            // Filtrar por el nombre de la liga
-                                                            if (liga.getNombre() != null && liga.getNombre().equals(nombreLigaFiltrar)) {
-                                                                // Crear un objeto Team con todos los datos combinados
-                                                                Goleadores goleadores= new Goleadores(estadistica,liga,xogador,cantidad);
+                                                                Goleadores goleadores = new Goleadores(estadistica, liga, xogador, cantidad);
                                                                 goleadoresList.add(goleadores);
+                                                                goleadoresList.sort(Comparator.comparingInt(Goleadores::getGoles).reversed());
 
-                                                                // Ordenar la lista por puntos después de agregar el equipo
-                                                                goleadoresList.sort(new Comparator<Goleadores>() {
-                                                                    @Override
-                                                                    public int compare(Goleadores t1, Goleadores t2) {
-                                                                        return Integer.compare(t2.getGoles(), t1.getGoles());
-                                                                    }
-                                                                });
-
-                                                                // Notificar al adaptador sobre el cambio de datos
                                                                 goleadoresAdapter.notifyDataSetChanged();
                                                             }
                                                         }
-                                                    }
-                                                });
+                                                    });
+                                                }
                                             }
                                         }
                                     });
@@ -110,11 +111,8 @@ public class GoleadoresFragment extends Fragment {
                     });
                 }
             } else {
-                Log.d(TAG, "Error getting documents: ", task.getException());
+                Log.d("GoleadoresFragment", "Error getting documents: ", task.getException());
             }
         });
-
-
-        return view;
     }
 }

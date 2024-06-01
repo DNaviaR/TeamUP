@@ -1,7 +1,5 @@
 package com.example.myapplication.models;
 
-import com.google.firebase.firestore.DocumentReference;
-
 public class Asistentes {
     private Estadistica estadistica;
     private Liga liga;

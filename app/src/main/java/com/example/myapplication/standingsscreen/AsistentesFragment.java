@@ -1,10 +1,9 @@
 package com.example.myapplication.standingsscreen;
 
-import static android.content.ContentValues.TAG;
-
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.myapplication.R;
+import com.example.myapplication.SharedViewModel;
 import com.example.myapplication.adapters.AsistentesAdapter;
 import com.example.myapplication.models.Asistentes;
 import com.example.myapplication.models.Estadistica;
@@ -32,11 +32,12 @@ public class AsistentesFragment extends Fragment {
     private RecyclerView recyclerView;
     private AsistentesAdapter asistentesAdapter;
     private ArrayList<Asistentes> asistentesList;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private SharedViewModel sharedViewModel;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_asistentes, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_asistentes, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
@@ -45,58 +46,56 @@ public class AsistentesFragment extends Fragment {
         asistentesAdapter = new AsistentesAdapter(asistentesList);
         recyclerView.setAdapter(asistentesAdapter);
 
-        // Define el nombre de la liga que deseas filtrar
-        String nombreLigaFiltrar = "Liga Pruebas";
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
-        // Paso 1: Consultar equipo_liga
+        sharedViewModel.getNombreLiga().observe(getViewLifecycleOwner(), nombreLiga -> {
+            if (nombreLiga != null && !nombreLiga.isEmpty()) {
+                cargarAsistentes(nombreLiga);
+            }
+        });
+
+        return view;
+    }
+
+    private void cargarAsistentes(String nombreLigaFiltrar) {
         db.collection("estadistica_xogador_liga").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                asistentesList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     DocumentReference estadisticaRef = document.getDocumentReference("Estadistica_ID");
                     DocumentReference ligaRef = document.getDocumentReference("Liga_ID");
                     DocumentReference xogadorRef = document.getDocumentReference("Xogador_ID");
                     int cantidad = document.getLong("Cantidad").intValue();
 
-                    // Paso 2: Consultar los nombres de equipo y liga
                     estadisticaRef.get().addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
                             DocumentSnapshot estadisticaDoc = task1.getResult();
                             if (estadisticaDoc.exists()) {
                                 Estadistica estadistica = new Estadistica(estadisticaDoc.getData());
 
-                                if (estadistica.getNombre().equals("Asistentes")){
+                                if ("Asistentes".equals(estadistica.getNombre())) {
                                     ligaRef.get().addOnCompleteListener(task11 -> {
                                         if (task11.isSuccessful()) {
                                             DocumentSnapshot ligaDoc = task11.getResult();
                                             if (ligaDoc.exists()) {
                                                 Liga liga = new Liga(ligaDoc.getData());
 
-                                                xogadorRef.get().addOnCompleteListener(task111 -> {
-                                                    if (task111.isSuccessful()) {
-                                                        DocumentSnapshot xogadorDoc = task111.getResult();
-                                                        if (xogadorDoc.exists()) {
-                                                            Xogador xogador = new Xogador(xogadorDoc.getData());
+                                                if (nombreLigaFiltrar.equals(liga.getNombre())) {
+                                                    xogadorRef.get().addOnCompleteListener(task111 -> {
+                                                        if (task111.isSuccessful()) {
+                                                            DocumentSnapshot xogadorDoc = task111.getResult();
+                                                            if (xogadorDoc.exists()) {
+                                                                Xogador xogador = new Xogador(xogadorDoc.getData());
 
-                                                            // Filtrar por el nombre de la liga
-                                                            if (liga.getNombre() != null && liga.getNombre().equals(nombreLigaFiltrar)) {
-                                                                // Crear un objeto Team con todos los datos combinados
-                                                                Asistentes asistentes= new Asistentes(estadistica,liga,xogador,cantidad);
+                                                                Asistentes asistentes = new Asistentes(estadistica, liga, xogador, cantidad);
                                                                 asistentesList.add(asistentes);
+                                                                asistentesList.sort(Comparator.comparingInt(Asistentes::getCantidad).reversed());
 
-                                                                // Ordenar la lista por puntos después de agregar el equipo
-                                                                asistentesList.sort(new Comparator<Asistentes>() {
-                                                                    @Override
-                                                                    public int compare(Asistentes t1, Asistentes t2) {
-                                                                        return Integer.compare(t2.getCantidad(), t1.getCantidad());
-                                                                    }
-                                                                });
-
-                                                                // Notificar al adaptador sobre el cambio de datos
                                                                 asistentesAdapter.notifyDataSetChanged();
                                                             }
                                                         }
-                                                    }
-                                                });
+                                                    });
+                                                }
                                             }
                                         }
                                     });
@@ -106,9 +105,8 @@ public class AsistentesFragment extends Fragment {
                     });
                 }
             } else {
-                Log.d(TAG, "Error getting documents: ", task.getException());
+                Log.d("AsistentesFragment", "Error getting documents: ", task.getException());
             }
         });
-        return view;
     }
 }
