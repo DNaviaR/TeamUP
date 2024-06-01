@@ -1,7 +1,5 @@
 package com.example.myapplication.homescreen;
 
-import static android.content.ContentValues.TAG;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,12 +13,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.example.myapplication.NavigationHost;
+import com.example.myapplication.OnItemClickListener;
 import com.example.myapplication.R;
 import com.example.myapplication.SharedViewModel;
 import com.example.myapplication.adapters.LigaAdapter;
 import com.example.myapplication.models.Liga;
 import com.example.myapplication.models.Usuario;
+import com.example.myapplication.standingsscreen.StandingsFragment;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -63,6 +65,16 @@ public class HomeFragment extends Fragment {
             if (usuario != null) {
                 String emailUsuarioFiltrar = usuario.getEmail();
                 cargarLigas(emailUsuarioFiltrar);
+            }
+        });
+        ligaAdapter.setOnItemClickListener(position -> {
+            Liga ligaSeleccionada = ligaList.get(position);
+            sharedViewModel.setNombreLiga(ligaSeleccionada.getNombre());
+            Toast.makeText(getContext(), "Seleccionado: " + ligaSeleccionada.getNombre(), Toast.LENGTH_SHORT).show();
+
+            // Navegar a otro fragmento si es necesario
+            if (getActivity() instanceof NavigationHost) {
+                ((NavigationHost) getActivity()).navigateTo(new StandingsFragment(), true);
             }
         });
 
