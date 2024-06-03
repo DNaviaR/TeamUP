@@ -1,7 +1,6 @@
 package com.example.myapplication.homescreen;
 
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -13,10 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
+import android.widget.Toast;;
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.NavigationHost;
-import com.example.myapplication.OnItemClickListener;
 import com.example.myapplication.R;
 import com.example.myapplication.SharedViewModel;
 import com.example.myapplication.adapters.LigaAdapter;
@@ -76,7 +74,13 @@ public class HomeFragment extends Fragment {
             if (getActivity() instanceof NavigationHost) {
                 ((NavigationHost) getActivity()).navigateTo(new StandingsFragment(), true);
             }
+
+            // Cambiar la selección de BottomNavigationView
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).setBottomNavigationItem(R.id.standings);
+            }
         });
+
 
         return view;
     }

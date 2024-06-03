@@ -5,6 +5,9 @@ import java.util.Map;
 public class Equipo {
     private String nombre;
 
+    public Equipo() {
+    }
+
     public Equipo(String nombre) {
         this.nombre = nombre;
     }

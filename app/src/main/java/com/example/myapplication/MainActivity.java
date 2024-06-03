@@ -11,6 +11,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.homescreen.HomeFragment;
+import com.example.myapplication.matchscreen.MatchFragment;
+import com.example.myapplication.profilescreen.ProfileFragment;
 import com.example.myapplication.standingsscreen.StandingsFragment;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -36,8 +38,8 @@ public class MainActivity extends AppCompatActivity implements NavigationHost{
                     .commit();
 
             // Ocultar la barra de navegación cuando se inicia en el fragmento de Login
-            //bottomNavigationView.setVisibility(View.GONE);
-            //topbar.setVisibility(View.GONE);
+            bottomNavigationView.setVisibility(View.GONE);
+            topbar.setVisibility(View.GONE);
         }
 
         ColorStateList colorStateList = ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color);
@@ -52,9 +54,9 @@ public class MainActivity extends AppCompatActivity implements NavigationHost{
             } else if (itemId == R.id.standings) {
                 fragment = new StandingsFragment();
             } else if (itemId == R.id.matches) {
-                fragment = new HomeFragment();
+                fragment = new MatchFragment();
             } else if (itemId == R.id.profile) {
-                fragment = new RegisterFragment();
+                fragment = new ProfileFragment();
             }
 
             if (fragment != null) {
@@ -93,5 +95,10 @@ public class MainActivity extends AppCompatActivity implements NavigationHost{
             topbar.setVisibility(View.VISIBLE);
         }
     }
+
+    public void setBottomNavigationItem(int itemId) {
+        bottomNavigationView.setSelectedItemId(itemId);
+    }
+
 
 }

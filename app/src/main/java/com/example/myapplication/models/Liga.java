@@ -6,6 +6,9 @@ public class Liga {
     private String nombre;
     private String codigo;
 
+    public Liga() {
+    }
+
     public Liga(String nombre, String codigo) {
         this.nombre = nombre;
         this.codigo = codigo;

@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.models.Equipo_Liga;
+import com.example.myapplication.models.EquipoLiga;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,7 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_HEADER = 0;
     private static final int VIEW_TYPE_ITEM = 1;
 
-    private ArrayList<Equipo_Liga> equipoLigaList;
+    private ArrayList<EquipoLiga> equipoLigaList;
 
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
         public HeaderViewHolder(View itemView) {
@@ -41,7 +41,7 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    public TeamAdapter(ArrayList<Equipo_Liga> equipoLigaList) {
+    public TeamAdapter(ArrayList<EquipoLiga> equipoLigaList) {
         this.equipoLigaList = equipoLigaList;
     }
 
@@ -68,7 +68,7 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ItemViewHolder) {
-            Equipo_Liga currentItem = equipoLigaList.get(position - 1); // Ajuste de posición por la cabecera
+            EquipoLiga currentItem = equipoLigaList.get(position - 1); // Ajuste de posición por la cabecera
             ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
             itemViewHolder.position.setText(String.valueOf(position)); // Usando la posición del RecyclerView ajustada
             itemViewHolder.name.setText(currentItem.getEquipo().getNombre());

@@ -1,7 +1,5 @@
 package com.example.myapplication.standingsscreen;
 
-import static android.content.ContentValues.TAG;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,19 +17,18 @@ import com.example.myapplication.R;
 import com.example.myapplication.SharedViewModel;
 import com.example.myapplication.adapters.TeamAdapter;
 import com.example.myapplication.models.Equipo;
-import com.example.myapplication.models.Equipo_Liga;
+import com.example.myapplication.models.EquipoLiga;
 import com.example.myapplication.models.Liga;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class ClasificacionFragment extends Fragment {
     private RecyclerView recyclerView;
     private TeamAdapter teamAdapter;
-    private ArrayList<Equipo_Liga> equipoLigaList;
+    private ArrayList<EquipoLiga> equipoLigaList;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private SharedViewModel sharedViewModel;
 
@@ -65,11 +62,11 @@ public class ClasificacionFragment extends Fragment {
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     DocumentReference equipoRef = document.getDocumentReference("Equipo_ID");
                     DocumentReference ligaRef = document.getDocumentReference("Liga_ID");
-                    int diferenciaGoles = document.getLong("Diferencia_Goles").intValue();
-                    int partidosEmpatados = document.getLong("Partidos_Empatados").intValue();
-                    int partidosGanados = document.getLong("Partidos_Ganados").intValue();
-                    int partidosPerdidos = document.getLong("Partidos_Perdidos").intValue();
-                    int puntos = document.getLong("Puntos").intValue();
+                    Long diferenciaGoles = document.getLong("Diferencia_Goles");
+                    Long partidosEmpatados = document.getLong("Partidos_Empatados");
+                    Long partidosGanados = document.getLong("Partidos_Ganados");
+                    Long partidosPerdidos = document.getLong("Partidos_Perdidos");
+                    Long puntos = document.getLong("Puntos");
 
                     equipoRef.get().addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
@@ -84,9 +81,9 @@ public class ClasificacionFragment extends Fragment {
                                             Liga liga = new Liga(ligaDoc.getData());
 
                                             if (liga.getNombre() != null && liga.getNombre().equals(nombreLigaFiltrar)) {
-                                                Equipo_Liga equipoLiga = new Equipo_Liga(equipo, liga, partidosGanados, partidosEmpatados, partidosPerdidos, diferenciaGoles, puntos);
+                                                EquipoLiga equipoLiga = new EquipoLiga(equipo, liga, partidosGanados, partidosEmpatados, partidosPerdidos, diferenciaGoles, puntos);
                                                 equipoLigaList.add(equipoLiga);
-                                                equipoLigaList.sort((t1, t2) -> Integer.compare(t2.getPuntos(), t1.getPuntos()));
+                                                equipoLigaList.sort((t1, t2) -> Long.compare(t2.getPuntos(), t1.getPuntos()));
                                                 teamAdapter.notifyDataSetChanged();
                                             }
                                         }
