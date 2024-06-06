@@ -43,4 +43,5 @@
     <string name="myleague">Mis ligas</string>
     <string name="createleague">Crear liga</string>
     <string name="joinleague">Unirse a liga</string>
+    <string name="unknown">Desconocido</string>
 </resources>

@@ -42,5 +42,6 @@
     <string name="myleague">My leagues</string>
     <string name="createleague">Create league</string>
     <string name="joinleague">Join league</string>
+    <string name="unknown">Unknown</string>
 
 </resources>

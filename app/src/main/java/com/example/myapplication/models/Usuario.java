@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 
 public class Usuario implements Serializable {
     private FirebaseAuth mAuth;
@@ -52,4 +53,13 @@ public class Usuario implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return Objects.equals(nombre, usuario.nombre) && Objects.equals(email, usuario.email);
+    }
+
 }

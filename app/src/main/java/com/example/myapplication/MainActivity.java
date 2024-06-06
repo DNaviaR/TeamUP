@@ -16,6 +16,7 @@ import com.example.myapplication.profilescreen.ProfileFragment;
 import com.example.myapplication.standingsscreen.StandingsFragment;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationHost{
@@ -100,5 +101,9 @@ public class MainActivity extends AppCompatActivity implements NavigationHost{
         bottomNavigationView.setSelectedItemId(itemId);
     }
 
+    public void logoutAndCloseApp() {
+        FirebaseAuth.getInstance().signOut();
+        finishAffinity(); // This will close the application
+    }
 
 }
