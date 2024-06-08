@@ -4,16 +4,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.myapplication.OnItemClickListener;
 import com.example.myapplication.R;
-import com.example.myapplication.models.Liga;
 import com.example.myapplication.models.Partido;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+
 
 public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.ItemViewHolder> {
 
@@ -21,7 +21,7 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.ItemView
     private OnItemClickListener listener;
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
-        public TextView equipo_local,equipo_visitante,fecha;
+        public TextView equipo_local, equipo_visitante, fecha;
 
         public ItemViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
@@ -71,17 +71,23 @@ public class PartidoAdapter extends RecyclerView.Adapter<PartidoAdapter.ItemView
         }
 
         if (currentItem.getFecha() != null) {
-            holder.fecha.setText(currentItem.getFecha().toString());
+            holder.fecha.setText(formatTime(currentItem.getFecha()));
         } else {
             holder.fecha.setText("Fecha no disponible");
         }
     }
 
-
     @Override
     public int getItemCount() {
         return partidoList.size();
     }
+
+    // Método para formatear la fecha para mostrar solo la hora
+    private String formatTime(Date date) {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        return timeFormat.format(date);
+    }
 }
+
 
 

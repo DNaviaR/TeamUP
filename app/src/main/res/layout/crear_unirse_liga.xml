@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/league_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre de la Liga"
+        android:padding="10dp"
+        android:background="@drawable/circle_background"
+        android:textColor="@color/secondary"
+        android:layout_marginBottom="10dp"/>
+
+    <EditText
+        android:id="@+id/league_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Código de la Liga"
+        android:padding="10dp"
+        android:background="@drawable/circle_background"
+        android:textColor="@color/secondary"/>
+
+</LinearLayout>

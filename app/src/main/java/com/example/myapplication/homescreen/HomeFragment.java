@@ -1,5 +1,6 @@
 package com.example.myapplication.homescreen;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.NavigationHost;
@@ -37,6 +40,8 @@ public class HomeFragment extends Fragment {
     private ArrayList<Liga> ligaList;
     private FirebaseFirestore db;
     private SharedViewModel sharedViewModel;
+    private Button ButtonCrearLiga;
+    private Button ButtonUnirseLiga;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +62,11 @@ public class HomeFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         ligaAdapter = new LigaAdapter(ligaList);
         recyclerView.setAdapter(ligaAdapter);
+        ButtonCrearLiga=view.findViewById(R.id.ButtonCrearLiga);
+        ButtonUnirseLiga=view.findViewById(R.id.ButtonUnirseLiga);
+
+        ButtonCrearLiga.setOnClickListener(v -> showLeagueDialog(getString(R.string.createleague)));
+        ButtonUnirseLiga.setOnClickListener(v -> showLeagueDialog(getString(R.string.joinleague)));
 
         // Observa el usuario logueado en el ViewModel
         sharedViewModel.getUsuario().observe(getViewLifecycleOwner(), usuario -> {
@@ -122,6 +132,27 @@ public class HomeFragment extends Fragment {
                 Log.d("HomeFragment", "Error getting documents: ", task.getException());
             }
         });
+    }
+
+    private void showLeagueDialog(String title) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle(title);
+
+        View dialogView = getLayoutInflater().inflate(R.layout.crear_unirse_liga, null);
+        builder.setView(dialogView);
+
+        EditText leagueNameEditText = dialogView.findViewById(R.id.league_name);
+        EditText leagueCodeEditText = dialogView.findViewById(R.id.league_code);
+
+        builder.setPositiveButton(getString(R.string.accept), (dialog, which) -> {
+            String leagueName = leagueNameEditText.getText().toString().trim();
+            String leagueCode = leagueCodeEditText.getText().toString().trim();
+        });
+
+        builder.setNegativeButton(getString(R.string.camcel), (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
 

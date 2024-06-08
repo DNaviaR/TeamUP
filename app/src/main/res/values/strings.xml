@@ -43,5 +43,7 @@
     <string name="createleague">Create league</string>
     <string name="joinleague">Join league</string>
     <string name="unknown">Unknown</string>
+    <string name="accept">Accept</string>
+    <string name="camcel">Cancel</string>
 
 </resources>

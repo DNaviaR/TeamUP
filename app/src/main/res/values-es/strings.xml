@@ -44,4 +44,6 @@
     <string name="createleague">Crear liga</string>
     <string name="joinleague">Unirse a liga</string>
     <string name="unknown">Desconocido</string>
+    <string name="accept">Aceptar</string>
+    <string name="camcel">Cancelar</string>
 </resources>
