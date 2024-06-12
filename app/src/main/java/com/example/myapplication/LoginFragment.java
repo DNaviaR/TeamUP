@@ -27,7 +27,6 @@ public class LoginFragment extends Fragment {
     private EditText passwordEditText;
     private Button loginButton;
     private TextView registerNowButton;
-
     private FirebaseAuth mAuth;
     private SharedViewModel sharedViewModel;
 

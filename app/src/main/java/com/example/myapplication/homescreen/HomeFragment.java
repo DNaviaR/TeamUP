@@ -1,5 +1,7 @@
 package com.example.myapplication.homescreen;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.AlertDialog;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -31,6 +33,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class HomeFragment extends Fragment {
@@ -91,7 +95,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         return view;
     }
 
@@ -135,8 +138,12 @@ public class HomeFragment extends Fragment {
     }
 
     private void showLeagueDialog(String title) {
+        boolean isEdit;
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle(title);
+        String joinLeagueString = getString(R.string.joinleague);
+
+        isEdit = title.equals(joinLeagueString);
 
         View dialogView = getLayoutInflater().inflate(R.layout.crear_unirse_liga, null);
         builder.setView(dialogView);
@@ -147,6 +154,37 @@ public class HomeFragment extends Fragment {
         builder.setPositiveButton(getString(R.string.accept), (dialog, which) -> {
             String leagueName = leagueNameEditText.getText().toString().trim();
             String leagueCode = leagueCodeEditText.getText().toString().trim();
+            if (!leagueName.isEmpty() && !leagueCode.isEmpty()) {
+                if (!isEdit){
+                    Map<String, Object> liga = new HashMap<>();
+                    liga.put("nombre", leagueName);
+                    liga.put("codigo", leagueCode);
+                    db.collection("ligas")
+                            .add(liga)
+                            .addOnSuccessListener(documentReference -> {
+                                String rol="Admin";
+                                // Usa el ID del documento en otra operación
+                                asociarLigaUsuario(documentReference, rol);
+                            })
+                            .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+                }else{
+                    String rol="Usuario";
+                    db.collection("ligas")
+                            .whereEqualTo("codigo", leagueCode)
+                            .whereEqualTo("nombre", leagueName)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                for (QueryDocumentSnapshot documents : queryDocumentSnapshots) {
+                                    DocumentReference ligaRef = documents.getReference();
+                                    asociarLigaUsuario(ligaRef,rol);
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.w(TAG, "Error al realizar la consulta", e);
+                                Toast.makeText(getContext(), "No hay ninguna liga con ese nombre o codigo.", Toast.LENGTH_SHORT).show();
+                            });
+                }
+            }
         });
 
         builder.setNegativeButton(getString(R.string.camcel), (dialog, which) -> dialog.dismiss());
@@ -154,5 +192,33 @@ public class HomeFragment extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    private void asociarLigaUsuario(DocumentReference document, String rol) {
+        Usuario usuario=new Usuario();
+        db.collection("usuarios")
+                .whereEqualTo("email", usuario.getEmail())
+                .whereEqualTo("nombre", usuario.getNombre())
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot documents : queryDocumentSnapshots) {
+
+                        DocumentReference usuarioRef = documents.getReference();
+                        Map<String, Object> usuarioLiga = new HashMap<>();
+                        usuarioLiga.put("Liga_ID", document);
+                        usuarioLiga.put("Rol", rol);
+                        usuarioLiga.put("Usuario_ID", usuarioRef);
+
+                        db.collection("usuario_liga")
+                                .add(usuarioLiga)
+                                .addOnSuccessListener(docRef -> Log.d(TAG, "Another document added with ID: " + docRef.getId()))
+                                .addOnFailureListener(e -> Log.w(TAG, "Error adding another document", e));
+                        cargarLigas(usuario.getEmail());
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.w(TAG, "Error al realizar la consulta", e);
+                });
+    }
+
 }
 

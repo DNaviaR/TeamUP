@@ -95,7 +95,6 @@ public class RegisterFragment extends Fragment {
                                             Map<String, Object> usuario = new HashMap<>();
                                             usuario.put("nombre", name);
                                             usuario.put("email", email);
-// Add a new document with a generated ID
                                             db.collection("usuarios")
                                                     .add(usuario)
                                                     .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))

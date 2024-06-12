@@ -23,6 +23,13 @@ public class Usuario implements Serializable {
         }
     }
 
+    public Usuario(String nombre, String email) {
+        this.nombre = nombre;
+        this.email = email;
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+    }
+
     public Usuario(Map<String, Object> datos) {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
